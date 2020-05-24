@@ -1,0 +1,66 @@
+From 6831e4375e7a2313a244a7a8449b73296e8cdd4f Mon Sep 17 00:00:00 2001
+From: Yash Sharma <yash13042000@gmail.com>
+Date: Sun, 26 Apr 2020 19:22:27 +0530
+Subject: [PATCH] Create Patch File
+
+---
+ client3.py | 11 +++++++----
+ server3.py |  2 +-
+ 2 files changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/client3.py b/client3.py
+index f1771c3..61e3c31 100644
+--- a/client3.py
++++ b/client3.py
+@@ -24,7 +24,7 @@ import json
+ import random
+ 
+ # Server API URLs
+-QUERY = "http://localhost:8080/query?id={}"
++QUERY = "http://localhost:8085/query?id={}"
+ 
+ # 500 server request
+ N = 500
+@@ -35,20 +35,23 @@ def getDataPoint(quote):
+ 	stock = quote['stock']
+ 	bid_price = float(quote['top_bid']['price'])
+ 	ask_price = float(quote['top_ask']['price'])
+-	price = bid_price
++	price = (bid_price+ask_price)/2
+ 	return stock, bid_price, ask_price, price
+ 
+ def getRatio(price_a, price_b):
+ 	""" Get ratio of price_a and price_b """
+ 	""" ------------- Update this function ------------- """
+ 	""" Also create some unit tests for this function in client_test.py """
+-	return 1
++	if(price_b==0)
++	#When price_b is 0 avoid throwing ZeroDivisionError
++	return
++	return price_a/price_b 
+ 
+ # Main
+ if __name__ == "__main__":
+ 
+ 	# Query the price once every N seconds.
+-	for _ in iter(range(N)):
++	for _ in range(N)):
+ 		quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
+ 
+ 		""" ----------- Update to get the ratio --------------- """
+diff --git a/server3.py b/server3.py
+index 2de4e28..63a14bd 100644
+--- a/server3.py
++++ b/server3.py
+@@ -202,7 +202,7 @@ def get(req_handler, routes):
+                 req_handler.wfile.write(bytes(data,  encoding = 'utf-8'))
+                 return
+ 
+-def run(routes, host = '0.0.0.0', port = 8080):
++def run(routes, host = '0.0.0.0', port = 8085):
+     """ Runs a class as a server whose methods have been decorated with
+         @route.
+     """
+-- 
+2.26.2.windows.1
+
